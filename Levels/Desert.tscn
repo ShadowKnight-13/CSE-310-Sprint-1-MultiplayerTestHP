@@ -26,6 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://c3b5baf8x6k11" path="res://interactables/med_kit.tscn" id="21_pqel0"]
 [ext_resource type="PackedScene" uid="uid://dhtv0mxqg1iet" path="res://interactables/cryo_tube.tscn" id="22_5d3c1"]
 [ext_resource type="Texture2D" uid="uid://bc5oc454b6se1" path="res://Art Assets/desert/pg-elevatorSideways.png" id="24_m5ebx"]
+[ext_resource type="PackedScene" uid="uid://saghcfd5g4wt" path="res://Player/player_2.tscn" id="27_5lm3o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ifivw"]
 texture = ExtResource("9_irpm5")
@@ -1538,6 +1539,10 @@ puzzle_controlled = true
 [node name="ColorRect" parent="MovingPlatforms/MovingPlatform7" index="0" unique_id=1972437753]
 visible = false
 
+[node name="Sprite2D" parent="MovingPlatforms/MovingPlatform7" index="2" unique_id=1211350987]
+visible = false
+texture = ExtResource("14_vsjx5")
+
 [node name="TextureRect2" type="TextureRect" parent="MovingPlatforms/MovingPlatform7" unique_id=100933184]
 offset_left = -143.78027
 offset_top = -48.4917
@@ -1545,10 +1550,6 @@ offset_right = 144.21973
 offset_bottom = 47.564453
 texture = ExtResource("14_vsjx5")
 stretch_mode = 1
-
-[node name="Sprite2D" parent="MovingPlatforms/MovingPlatform7" index="3" unique_id=1211350987]
-visible = false
-texture = ExtResource("14_vsjx5")
 
 [node name="Receiver 7" parent="MovingPlatforms/MovingPlatform7" unique_id=361904512 instance=ExtResource("15_v10ob")]
 puzzle_id = "10"
@@ -1604,6 +1605,9 @@ position = Vector2(3770, -1362)
 
 [node name="cryo tube2" parent="." unique_id=897527679 instance=ExtResource("22_5d3c1")]
 position = Vector2(10125, -72)
+
+[node name="Player2" parent="." unique_id=168943711 instance=ExtResource("27_5lm3o")]
+position = Vector2(-293, 55)
 
 [editable path="Button9"]
 [editable path="MovingPlatforms/MovingPlatform8"]
