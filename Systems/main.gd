@@ -169,7 +169,7 @@ func _resolve_level_ref_to_path(level_ref: String) -> String:
 
 func _remove_player_nodes_recursive(root: Node) -> void:
 	for child in root.get_children():
-		if child.name == "Player" or child.name == "Player2":
+		if child is CharacterBody2D and child.is_in_group("player"):
 			# The level scene is currently not in the main tree yet, so free immediately.
 			child.free()
 		else:

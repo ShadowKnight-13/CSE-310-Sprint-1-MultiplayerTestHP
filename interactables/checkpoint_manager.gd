@@ -11,7 +11,7 @@ func set_checkpoint(position: Vector2, player_1_health: int, player_2_health: in
 	last_position = position
 	last_health_by_player[1] = clampi(player_1_health, 0, 3)
 	last_health_by_player[2] = clampi(player_2_health, 0, 3)
-	checkpoint_reached.emit(position, last_health_by_player.duplicate())
+	checkpoint_reached.emit(position, last_health_by_player.duplicate(true))
 
 func get_spawn_position() -> Vector2:
 	return last_position
