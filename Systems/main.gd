@@ -139,6 +139,7 @@ func respawn_players(full_health: bool = false) -> void:
 		wrapper_player.emit_signal("health_changed", wrapper_player.health)
 
 func respawn_player(full_health: bool = false) -> void:
+	# Backward-compat shim for scripts that still call the single-player API.
 	respawn_players(full_health)
 
 func _clear_current_level() -> void:
