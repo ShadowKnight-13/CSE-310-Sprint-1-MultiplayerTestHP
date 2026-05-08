@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c4gxvtbqe0x2p" path="res://Levels/Test Level.tscn" id="1_4h0sv"]
 [ext_resource type="PackedScene" uid="uid://dgrq8cggm37yk" path="res://Player/Player.tscn" id="2_mqxgj"]
+[ext_resource type="PackedScene" uid="uid://d0yetm658hgld" path="res://Player/player_2.tscn" id="3_yje8x"]
 [ext_resource type="Script" uid="uid://bscivubcrm4kt" path="res://Player/healthManager.gd" id="3_cm0pq"]
 [ext_resource type="Texture2D" uid="uid://b86oo4ai3bhyo" path="res://Art Assets/hearts/heart_32x32.png" id="4_fos0i"]
 [ext_resource type="PackedScene" uid="uid://cq8n1nsit3vwx" path="res://UI/pause_menu.tscn" id="5_fos0i"]
@@ -17,6 +18,9 @@ default_spawn_position = Vector2(0, 0)
 
 [node name="Player" parent="." unique_id=1001394227 instance=ExtResource("2_mqxgj")]
 position = Vector2(200, 200)
+
+[node name="Player2" parent="." unique_id=1576612709 instance=ExtResource("3_yje8x")]
+position = Vector2(240, 200)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1114919873]
 position_smoothing_enabled = true
@@ -43,6 +47,31 @@ layout_mode = 2
 texture = ExtResource("4_fos0i")
 stretch_mode = 2
 
+[node name="HealthP2" type="HBoxContainer" parent="UI" unique_id=979762522]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -128.0
+offset_right = -24.0
+offset_bottom = 40.0
+grow_horizontal = 0
+script = ExtResource("3_cm0pq")
+
+[node name="TextureRect" type="TextureRect" parent="UI/HealthP2" unique_id=1013579308]
+layout_mode = 2
+texture = ExtResource("4_fos0i")
+stretch_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="UI/HealthP2" unique_id=1218204467]
+layout_mode = 2
+texture = ExtResource("4_fos0i")
+stretch_mode = 2
+
+[node name="TextureRect3" type="TextureRect" parent="UI/HealthP2" unique_id=1781601204]
+layout_mode = 2
+texture = ExtResource("4_fos0i")
+stretch_mode = 2
+
 [node name="CollectiblesCounter" type="HBoxContainer" parent="UI" unique_id=1628419133]
 anchors_preset = 1
 anchor_left = 1.0
@@ -62,3 +91,4 @@ text = "People saved: 0"
 visible = false
 
 [connection signal="health_changed" from="Player" to="UI/Health" method="_on_player_health_changed"]
+[connection signal="health_changed" from="Player2" to="UI/HealthP2" method="_on_player_health_changed"]

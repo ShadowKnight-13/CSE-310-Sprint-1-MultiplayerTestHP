@@ -14,14 +14,14 @@ func _ready() -> void:
 func _on_interact():
 	if has_been_used:
 		return
-	var player = get_tree().get_first_node_in_group("player")
-	if player and player.has_method("heal"):
-		player.heal(heal_amount)
+	for player in get_tree().get_nodes_in_group("player"):
+		if player and player.has_method("heal"):
+			player.heal(heal_amount)
 	has_been_used = true
 	sprite_2d.visible = false
-	print("Med kit used! Player healed for ", heal_amount, " health")
+	print("Med kit used! Team healed for ", heal_amount, " health")
 
-func _on_checkpoint_reached(_position: Vector2, _health: int):
+func _on_checkpoint_reached(_position: Vector2, _health_by_player: Dictionary):
 	has_been_used = false
 	sprite_2d.visible = true
 	print("Med kit reset at checkpoint")
