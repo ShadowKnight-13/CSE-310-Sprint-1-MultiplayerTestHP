@@ -17,7 +17,10 @@ func get_spawn_position() -> Vector2:
 	return last_position
 
 func get_spawn_health(player_id: int) -> int:
-	return int(last_health_by_player.get(player_id, 3))
+	var health_value = last_health_by_player.get(player_id, 3)
+	if health_value is int:
+		return health_value
+	return 3
 
 func has_checkpoint() -> bool:
 	return last_position != Vector2.INF

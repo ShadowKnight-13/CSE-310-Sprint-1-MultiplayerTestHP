@@ -186,8 +186,8 @@ func _get_wrapper_players() -> Array[Node2D]:
 func _get_player_id(player: Node, fallback: int) -> int:
 	if player:
 		var player_id_value = player.get("player_id")
-		if player_id_value != null:
-			return int(player_id_value)
+		if player_id_value is int:
+			return player_id_value
 	return fallback
 
 func _find_spawn_point_node(root: Node) -> Node2D:
