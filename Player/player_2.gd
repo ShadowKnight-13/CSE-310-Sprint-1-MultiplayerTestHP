@@ -76,6 +76,7 @@ var debug_rays = []
 var debug_rays_visible := false
 
 signal health_changed
+@export var player_id: int = 2
 
 func player_death():
 	# When health reaches 0, ask Main to respawn instead of reloading the scene.

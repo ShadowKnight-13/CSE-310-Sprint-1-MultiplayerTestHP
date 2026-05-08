@@ -6,9 +6,11 @@ extends Node2D
 
 var current_level_instance: Node = null
 @onready var _level_container: Node = $Level
-@onready var _wrapper_player: Node2D = $Player
+@onready var _wrapper_player_1: Node2D = get_node_or_null("Player")
+@onready var _wrapper_player_2: Node2D = get_node_or_null("Player2")
 var _active_level_resolved_path: String = ""
 var _current_level_path: String = ""
+const TEAM_RESPAWN_OFFSETS := [Vector2(-24, 0), Vector2(24, 0)]
 
 func _ready() -> void:
 	add_to_group("GameMain")
@@ -18,7 +20,7 @@ func _ready() -> void:
 		load_level(level_scene.resource_path)
 	else:
 		# Still ensure the wrapper player has correct initial health/state.
-		respawn_player()
+		respawn_players()
 
 
 func set_font_size_recursive(node: Node, size: int) -> void:
@@ -70,20 +72,20 @@ func load_level(level_ref: String) -> void:
 	_remove_player_nodes_recursive(current_level_instance)
 
 	_level_container.add_child(current_level_instance)
-	respawn_player()
+	respawn_players()
 	set_font_size_recursive(self, UiGlobals.text_size)
 
 func reset_current_level_on_death() -> void:
 	# Recreate the current level instance so enemies/hazards reset,
 	# but keep checkpoint data so respawn still uses it.
 	if _current_level_path == "":
-		respawn_player(true)
+		respawn_players(true)
 		return
 
 	var packed_scene: PackedScene = load(_current_level_path)
 	if packed_scene == null:
 		push_error("Main.reset_current_level_on_death: Failed to load PackedScene: %s" % _current_level_path)
-		respawn_player(true)
+		respawn_players(true)
 		return
 
 	_clear_current_level()
@@ -93,15 +95,17 @@ func reset_current_level_on_death() -> void:
 	_remove_player_nodes_recursive(current_level_instance)
 	_level_container.add_child(current_level_instance)
 
-	respawn_player(true)
+	respawn_players(true)
 
-func respawn_player(full_health: bool = false) -> void:
+func respawn_players(full_health: bool = false) -> void:
 	var spawn_pos: Vector2 = default_spawn_position
-	var spawn_health: int = default_spawn_health
+	var spawn_health_p1: int = default_spawn_health
+	var spawn_health_p2: int = default_spawn_health
 
 	if CheckpointManager.has_checkpoint():
 		spawn_pos = CheckpointManager.get_spawn_position()
-		spawn_health = default_spawn_health if full_health else CheckpointManager.get_spawn_health()
+		spawn_health_p1 = default_spawn_health if full_health else CheckpointManager.get_spawn_health(1)
+		spawn_health_p2 = default_spawn_health if full_health else CheckpointManager.get_spawn_health(2)
 	else:
 		# Prefer a per-level SpawnPoint marker if it exists.
 		var spawn_node := _find_spawn_point_node(current_level_instance)
@@ -109,20 +113,34 @@ func respawn_player(full_health: bool = false) -> void:
 			spawn_pos = spawn_node.global_position
 
 		# If no spawn node exists, keep defaults.
-		spawn_health = default_spawn_health
+		spawn_health_p1 = default_spawn_health
+		spawn_health_p2 = default_spawn_health
 
-	_wrapper_player.global_position = spawn_pos
-	_wrapper_player.health = spawn_health
+	var players := _get_wrapper_players()
+	for i in range(players.size()):
+		var wrapper_player := players[i]
+		var player_id := _get_player_id(wrapper_player, i + 1)
+		var player_spawn_health := spawn_health_p1 if player_id == 1 else spawn_health_p2
+		var spawn_offset := Vector2.ZERO
+		if players.size() > 1:
+			spawn_offset = TEAM_RESPAWN_OFFSETS[min(i, TEAM_RESPAWN_OFFSETS.size() - 1)]
 
-	# Reset internal movement/dash/crouch/collision state for consistent respawns.
-	if _wrapper_player.has_method("reset_for_respawn"):
-		_wrapper_player.call("reset_for_respawn")
-	else:
-		# Minimal fallback in case the method isn't present.
-		_wrapper_player.velocity = Vector2.ZERO
-		_wrapper_player.set_physics_process(true)
+		wrapper_player.global_position = spawn_pos + spawn_offset
+		wrapper_player.health = player_spawn_health
 
-	_wrapper_player.emit_signal("health_changed", _wrapper_player.health)
+		# Reset internal movement/dash/crouch/collision state for consistent respawns.
+		if wrapper_player.has_method("reset_for_respawn"):
+			wrapper_player.call("reset_for_respawn")
+		else:
+			# Minimal fallback in case the method isn't present.
+			wrapper_player.velocity = Vector2.ZERO
+			wrapper_player.set_physics_process(true)
+
+		wrapper_player.emit_signal("health_changed", wrapper_player.health)
+
+func respawn_player(full_health: bool = false) -> void:
+	# Backward-compat shim for scripts that still call the single-player API.
+	respawn_players(full_health)
 
 func _clear_current_level() -> void:
 	if current_level_instance and is_instance_valid(current_level_instance):
@@ -152,11 +170,26 @@ func _resolve_level_ref_to_path(level_ref: String) -> String:
 
 func _remove_player_nodes_recursive(root: Node) -> void:
 	for child in root.get_children():
-		if child.name == "Player":
+		if child is CharacterBody2D and child.is_in_group("player"):
 			# The level scene is currently not in the main tree yet, so free immediately.
 			child.free()
 		else:
 			_remove_player_nodes_recursive(child)
+
+func _get_wrapper_players() -> Array[Node2D]:
+	var players: Array[Node2D] = []
+	if _wrapper_player_1 and is_instance_valid(_wrapper_player_1):
+		players.append(_wrapper_player_1)
+	if _wrapper_player_2 and is_instance_valid(_wrapper_player_2):
+		players.append(_wrapper_player_2)
+	return players
+
+func _get_player_id(player: Node, fallback: int) -> int:
+	if player:
+		var player_id_value = player.get("player_id")
+		if player_id_value is int:
+			return player_id_value
+	return fallback
 
 func _find_spawn_point_node(root: Node) -> Node2D:
 	if root == null:
