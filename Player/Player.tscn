@@ -1,87 +1,393 @@
 [gd_scene format=3 uid="uid://dgrq8cggm37yk"]
 
-[ext_resource type="Script" uid="uid://dditj0drorscr" path="res://Systems/main.gd" id="1_vlldt"]
-[ext_resource type="PackedScene" uid="uid://c4gxvtbqe0x2p" path="res://Levels/Test Level.tscn" id="2_s1rgi"]
-[ext_resource type="Script" uid="uid://bscivubcrm4kt" path="res://Player/healthManager.gd" id="3_j23h2"]
-[ext_resource type="Texture2D" uid="uid://b86oo4ai3bhyo" path="res://Art Assets/hearts/heart_32x32.png" id="4_0j2ni"]
-[ext_resource type="Script" uid="uid://dcri4j14qlsqv" path="res://UI/collectibles_hud.gd" id="5_v0k0e"]
-[ext_resource type="PackedScene" uid="uid://cq8n1nsit3vwx" path="res://UI/pause_menu.tscn" id="6_5wa8t"]
-[ext_resource type="PackedScene" uid="uid://dgrq8cggm37yk" path="res://Player/Player.tscn" id="7_p7tob"]
+[ext_resource type="Script" uid="uid://dl3hynw85ktt4" path="res://Player/Player.gd" id="1_ucuap"]
+[ext_resource type="Texture2D" uid="uid://fe21evhj0ubl" path="res://Art Assets/6. Character Animations 32p/Player/player-spritesheet.png" id="2_nilex"]
+[ext_resource type="Texture2D" uid="uid://b55bda76agyif" path="res://Art Assets/6. Character Animations 32p/Player/pg-hiteffect.png" id="3_1ecgp"]
+[ext_resource type="PackedScene" uid="uid://dumlqjvjwddcd" path="res://Player/interaction_area.tscn" id="4_gh7mo"]
+[ext_resource type="Script" uid="uid://b8rcmd3uv2s03" path="res://Player/melee_hitbox.gd" id="5_v0mt8"]
+[ext_resource type="AudioStream" uid="uid://ce3kwgu25dfu2" path="res://sounds/jump.wav" id="6_mujjb"]
+[ext_resource type="AudioStream" uid="uid://qxvfjp5nou80" path="res://sounds/dash.wav" id="7_nxtay"]
+[ext_resource type="AudioStream" uid="uid://dnugqx7j3p8r6" path="res://sounds/swing.wav" id="8_um7uo"]
+[ext_resource type="AudioStream" uid="uid://d2x2v5kl62y6t" path="res://sounds/hurt.wav" id="9_slvjm"]
 
-[node name="Main" type="Node2D" unique_id=618264885]
-script = ExtResource("1_vlldt")
-level_scene = ExtResource("2_s1rgi")
-default_spawn_position = Vector2(0, 0)
-default_spawn_health = null
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v6p7n"]
+size = Vector2(26, 60)
 
-[node name="Level" type="Node2D" parent="." unique_id=314983792]
+[sub_resource type="Animation" id="Animation_ddoul"]
+resource_name = "Attack"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.03333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [16, 17]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SFX/swing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Hit:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hit:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.033333335, 0.13333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
 
-[node name="Player" parent="." unique_id=1001394227 instance=ExtResource("7_p7tob")]
-position = Vector2(200, 200)
-player_id = null
+[sub_resource type="Animation" id="Animation_vlldt"]
+resource_name = "Damage"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.23333333, 0.43333334, 0.6333333, 0.8666667, 1.1, 1.3379868),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 0, 0, 1), Color(1, 1, 1, 1), Color(0, 0, 0, 1), Color(1, 1, 1, 1), Color(0, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SFX/hurt:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1114919873]
-position_smoothing_enabled = true
+[sub_resource type="Animation" id="Animation_5ncpa"]
+resource_name = "Dash"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [14]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SFX/dash")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}]
+}
 
-[node name="UI" type="CanvasLayer" parent="." unique_id=470067946]
+[sub_resource type="Animation" id="Animation_cxr5p"]
+resource_name = "Fall"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [13]
+}
 
-[node name="Health" type="HBoxContainer" parent="UI" unique_id=1020977143]
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("3_j23h2")
+[sub_resource type="Animation" id="Animation_s1rgi"]
+resource_name = "Getup"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.033333335),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [18, 19]
+}
 
-[node name="TextureRect" type="TextureRect" parent="UI/Health" unique_id=1480233141]
-layout_mode = 2
-texture = ExtResource("4_0j2ni")
-stretch_mode = 2
+[sub_resource type="Animation" id="Animation_dtqjt"]
+resource_name = "Idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
 
-[node name="TextureRect2" type="TextureRect" parent="UI/Health" unique_id=1940240176]
-layout_mode = 2
-texture = ExtResource("4_0j2ni")
-stretch_mode = 2
+[sub_resource type="Animation" id="Animation_kpjcp"]
+resource_name = "Jump"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [12]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SFX/jump:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(3.528705e-05),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
-[node name="TextureRect3" type="TextureRect" parent="UI/Health" unique_id=808781982]
-layout_mode = 2
-texture = ExtResource("4_0j2ni")
-stretch_mode = 2
+[sub_resource type="Animation" id="Animation_e80uo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("SFX/jump:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("SFX/hurt:playing")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Hit:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Hit:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
-[node name="Health2" type="HBoxContainer" parent="UI" unique_id=1108680208]
-offset_left = 1176.0
-offset_right = 1280.0
-offset_bottom = 40.0
-script = ExtResource("3_j23h2")
+[sub_resource type="Animation" id="Animation_kne1u"]
+resource_name = "Run"
+length = 0.65
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.13333334, 0.2, 0.26666668, 0.33333334, 0.4, 0.46666667, 0.53333336, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+}
 
-[node name="TextureRect" type="TextureRect" parent="UI/Health2" unique_id=1348365722]
-layout_mode = 2
-texture = ExtResource("4_0j2ni")
-stretch_mode = 2
+[sub_resource type="Animation" id="Animation_tdg3f"]
+resource_name = "Wall_slide"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [15]
+}
 
-[node name="TextureRect2" type="TextureRect" parent="UI/Health2" unique_id=1977126361]
-layout_mode = 2
-texture = ExtResource("4_0j2ni")
-stretch_mode = 2
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cxr5p"]
+_data = {
+&"Attack": SubResource("Animation_ddoul"),
+&"Damage": SubResource("Animation_vlldt"),
+&"Dash": SubResource("Animation_5ncpa"),
+&"Fall": SubResource("Animation_cxr5p"),
+&"Getup": SubResource("Animation_s1rgi"),
+&"Idle": SubResource("Animation_dtqjt"),
+&"Jump": SubResource("Animation_kpjcp"),
+&"RESET": SubResource("Animation_e80uo"),
+&"Run": SubResource("Animation_kne1u"),
+&"Wall_slide": SubResource("Animation_tdg3f")
+}
 
-[node name="TextureRect3" type="TextureRect" parent="UI/Health2" unique_id=514602181]
-layout_mode = 2
-texture = ExtResource("4_0j2ni")
-stretch_mode = 2
+[sub_resource type="CircleShape2D" id="CircleShape2D_j23h2"]
+radius = 30.0
 
-[node name="CollectiblesCounter" type="HBoxContainer" parent="UI" unique_id=1628419133]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -149.0
-offset_top = 32.0
-offset_right = -1.0
-offset_bottom = 64.0
-grow_horizontal = 0
-script = ExtResource("5_v0k0e")
+[node name="Player" type="CharacterBody2D" unique_id=509081286 groups=["player"]]
+collision_layer = 3
+collision_mask = 7
+script = ExtResource("1_ucuap")
 
-[node name="Label" type="Label" parent="UI/CollectiblesCounter" unique_id=1628419134]
-layout_mode = 2
-text = "People saved: 0"
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=487469612]
+position = Vector2(1, 0)
+shape = SubResource("RectangleShape2D_v6p7n")
 
-[node name="PauseMenu" parent="UI" unique_id=1336150361 instance=ExtResource("6_5wa8t")]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=834329966]
 visible = false
+offset_left = -20.0
+offset_top = -30.0
+offset_right = 20.0
+offset_bottom = 30.0
+color = Color(0.2, 0.6, 1, 1)
 
-[connection signal="health_changed" from="Player" to="UI/Health" method="_on_player_health_changed"]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=259828460]
+texture_filter = 3
+position = Vector2(0, -7)
+texture = ExtResource("2_nilex")
+hframes = 21
+frame = 2
+
+[node name="Hit" type="Sprite2D" parent="." unique_id=1936304280]
+texture_filter = 1
+position = Vector2(23, 0)
+texture = ExtResource("3_1ecgp")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1991847177 groups=["player"]]
+libraries/ = SubResource("AnimationLibrary_cxr5p")
+
+[node name="InteractionArea" parent="." unique_id=466089267 instance=ExtResource("4_gh7mo")]
+
+[node name="MeleeHitbox" type="Area2D" parent="." unique_id=730947021]
+collision_mask = 9
+monitoring = false
+monitorable = false
+script = ExtResource("5_v0mt8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MeleeHitbox" unique_id=493722756]
+shape = SubResource("CircleShape2D_j23h2")
+
+[node name="FloorRaycast" type="RayCast2D" parent="." unique_id=312045678]
+
+[node name="SFX" type="Node2D" parent="." unique_id=143620651]
+
+[node name="jump" type="AudioStreamPlayer2D" parent="SFX" unique_id=1667126380]
+stream = ExtResource("6_mujjb")
+volume_db = 1.0
+
+[node name="dash" type="AudioStreamPlayer2D" parent="SFX" unique_id=1515070445]
+stream = ExtResource("7_nxtay")
+volume_db = -2.0
+
+[node name="swing" type="AudioStreamPlayer2D" parent="SFX" unique_id=1717191298]
+stream = ExtResource("8_um7uo")
+
+[node name="hurt" type="AudioStreamPlayer2D" parent="SFX" unique_id=1400812050]
+stream = ExtResource("9_slvjm")
+
+[node name="Cyote_Timer" type="Timer" parent="." unique_id=508443012]
+unique_name_in_owner = true
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="body_entered" from="MeleeHitbox" to="." method="_on_melee_hitbox_body_entered"]

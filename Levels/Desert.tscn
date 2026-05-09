@@ -26,7 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://c3b5baf8x6k11" path="res://interactables/med_kit.tscn" id="21_pqel0"]
 [ext_resource type="PackedScene" uid="uid://dhtv0mxqg1iet" path="res://interactables/cryo_tube.tscn" id="22_5d3c1"]
 [ext_resource type="Texture2D" uid="uid://bc5oc454b6se1" path="res://Art Assets/desert/pg-elevatorSideways.png" id="24_m5ebx"]
-[ext_resource type="PackedScene" uid="uid://saghcfd5g4wt" path="res://Player/player_2.tscn" id="27_5lm3o"]
+[ext_resource type="PackedScene" uid="uid://d0yetm658hgld" path="res://Player/player_2.tscn" id="27_5lm3o"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ifivw"]
 texture = ExtResource("9_irpm5")
