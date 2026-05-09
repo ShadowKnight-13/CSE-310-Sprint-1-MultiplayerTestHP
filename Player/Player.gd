@@ -1,7 +1,7 @@
 extends CharacterBody2D
 class_name Player
 
-@export var player_id = 1
+@export var player_id :int = 1
 const SPEED = 300.01
 const JUMP_HEIGHT: float = -500.0
 const JUMP_CUT_MULTIPLIER: float = 0.2
@@ -77,7 +77,6 @@ var debug_rays = []
 var debug_rays_visible := false
 
 signal health_changed
-@export var player_id: int = 1
 
 func player_death():
 	# When health reaches 0, ask Main to respawn instead of reloading the scene.
