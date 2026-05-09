@@ -128,7 +128,7 @@ func respawn_players(full_health: bool = false) -> void:
 			spawn_offset = TEAM_RESPAWN_OFFSETS[min(i, TEAM_RESPAWN_OFFSETS.size() - 1)]
 
 		wrapper_player.global_position = spawn_pos + spawn_offset
-		wrapper_player.set("health", team_spawn_health)
+		wrapper_player.health = team_spawn_health
 
 		# Reset internal movement/dash/crouch/collision state for consistent respawns.
 		if wrapper_player.has_method("reset_for_respawn"):
@@ -140,7 +140,7 @@ func respawn_players(full_health: bool = false) -> void:
 			wrapper_player.set_physics_process(true)
 
 		if wrapper_player.has_signal("health_changed"):
-			wrapper_player.emit_signal("health_changed", wrapper_player.get("health"))
+			wrapper_player.emit_signal("health_changed", wrapper_player.health)
 
 func respawn_player(full_health: bool = false) -> void:
 	# Backward-compat shim for scripts that still call the single-player API.
@@ -188,7 +188,7 @@ func _get_wrapper_players() -> Array[Node2D]:
 		players.append(_wrapper_player_2)
 
 	for node in get_tree().get_nodes_in_group("player"):
-		if node is Node2D and not players.has(node):
+		if node is CharacterBody2D and not players.has(node):
 			players.append(node)
 	return players
 
