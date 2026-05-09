@@ -47,7 +47,6 @@ layout_mode = 2
 texture = ExtResource("4_fos0i")
 stretch_mode = 2
 
-<<<<<<< Updated upstream
 [node name="HealthP2" type="HBoxContainer" parent="UI" unique_id=979762522]
 anchors_preset = 1
 anchor_left = 1.0
@@ -59,33 +58,16 @@ grow_horizontal = 0
 script = ExtResource("3_cm0pq")
 
 [node name="TextureRect" type="TextureRect" parent="UI/HealthP2" unique_id=1013579308]
-=======
-[node name="Health2" type="HBoxContainer" parent="UI" unique_id=1108680208]
-offset_left = 1176.0
-offset_right = 1280.0
-offset_bottom = 40.0
-script = ExtResource("3_cm0pq")
-
-[node name="TextureRect" type="TextureRect" parent="UI/Health2" unique_id=1348365722]
->>>>>>> Stashed changes
 layout_mode = 2
 texture = ExtResource("4_fos0i")
 stretch_mode = 2
 
-<<<<<<< Updated upstream
 [node name="TextureRect2" type="TextureRect" parent="UI/HealthP2" unique_id=1218204467]
-=======
-[node name="TextureRect2" type="TextureRect" parent="UI/Health2" unique_id=1977126361]
->>>>>>> Stashed changes
 layout_mode = 2
 texture = ExtResource("4_fos0i")
 stretch_mode = 2
 
-<<<<<<< Updated upstream
 [node name="TextureRect3" type="TextureRect" parent="UI/HealthP2" unique_id=1781601204]
-=======
-[node name="TextureRect3" type="TextureRect" parent="UI/Health2" unique_id=514602181]
->>>>>>> Stashed changes
 layout_mode = 2
 texture = ExtResource("4_fos0i")
 stretch_mode = 2
