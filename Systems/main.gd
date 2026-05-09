@@ -114,24 +114,33 @@ func respawn_players(full_health: bool = false) -> void:
 		team_spawn_health = default_spawn_health
 
 	var players := _get_wrapper_players()
-	for i in range(players.size()):
-		var wrapper_player := players[i]
+	var valid_players: Array[Node2D] = []
+	for wrapper_player in players:
+		if _is_valid_wrapper_player(wrapper_player):
+			valid_players.append(wrapper_player)
+		elif wrapper_player != null and is_instance_valid(wrapper_player):
+			push_warning("Main.respawn_players: skipping incompatible player node '%s' (%s)" % [wrapper_player.name, wrapper_player.get_class()])
+
+	for i in range(valid_players.size()):
+		var wrapper_player := valid_players[i]
 		var spawn_offset := Vector2.ZERO
-		if players.size() > 1:
+		if valid_players.size() > 1:
 			spawn_offset = TEAM_RESPAWN_OFFSETS[min(i, TEAM_RESPAWN_OFFSETS.size() - 1)]
 
 		wrapper_player.global_position = spawn_pos + spawn_offset
-		wrapper_player.health = team_spawn_health
+		wrapper_player.set("health", team_spawn_health)
 
 		# Reset internal movement/dash/crouch/collision state for consistent respawns.
 		if wrapper_player.has_method("reset_for_respawn"):
 			wrapper_player.call("reset_for_respawn")
 		else:
 			# Minimal fallback in case the method isn't present.
-			wrapper_player.velocity = Vector2.ZERO
+			if "velocity" in wrapper_player:
+				wrapper_player.velocity = Vector2.ZERO
 			wrapper_player.set_physics_process(true)
 
-		wrapper_player.emit_signal("health_changed", wrapper_player.health)
+		if wrapper_player.has_signal("health_changed"):
+			wrapper_player.emit_signal("health_changed", wrapper_player.get("health"))
 
 func respawn_player(full_health: bool = false) -> void:
 	# Backward-compat shim for scripts that still call the single-player API.
@@ -177,7 +186,23 @@ func _get_wrapper_players() -> Array[Node2D]:
 		players.append(_wrapper_player_1)
 	if _wrapper_player_2 and is_instance_valid(_wrapper_player_2):
 		players.append(_wrapper_player_2)
+
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is Node2D and not players.has(node):
+			players.append(node)
 	return players
+
+func _is_valid_wrapper_player(node: Node) -> bool:
+	if node == null or not is_instance_valid(node):
+		return false
+	if not (node is CharacterBody2D):
+		return false
+	if not node.is_in_group("player"):
+		return false
+	var health_value = node.get("health")
+	if not (health_value is int):
+		return false
+	return true
 
 func _get_player_id(player: Node, fallback: int) -> int:
 	if player:
