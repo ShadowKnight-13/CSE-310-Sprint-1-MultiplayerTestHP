@@ -22,6 +22,13 @@ func get_spawn_health(player_id: int) -> int:
 		return health_value
 	return DEFAULT_HEALTH
 
+func get_team_spawn_health() -> int:
+	var spawn_health := DEFAULT_HEALTH
+	for health_value in last_health_by_player.values():
+		if health_value is int:
+			spawn_health = max(spawn_health, health_value)
+	return spawn_health
+
 func has_checkpoint() -> bool:
 	return last_position != Vector2.INF
 
