@@ -114,7 +114,7 @@ func respawn_players(full_health: bool = false) -> void:
 		team_spawn_health = default_spawn_health
 
 	var players := _get_wrapper_players()
-	var valid_players: Array[Node2D] = []
+	var valid_players: Array[CharacterBody2D] = []
 	for wrapper_player in players:
 		if _is_valid_wrapper_player(wrapper_player):
 			valid_players.append(wrapper_player)
@@ -180,22 +180,22 @@ func _remove_player_nodes_recursive(root: Node) -> void:
 		else:
 			_remove_player_nodes_recursive(child)
 
-func _get_wrapper_players() -> Array[Node2D]:
-	var players: Array[Node2D] = []
+func _get_wrapper_players() -> Array[CharacterBody2D]:
+	var players: Array[CharacterBody2D] = []
 	if _wrapper_player_1 and is_instance_valid(_wrapper_player_1):
 		if _is_valid_wrapper_player(_wrapper_player_1):
-			players.append(_wrapper_player_1)
+			players.append(_wrapper_player_1 as CharacterBody2D)
 		else:
 			push_warning("Main._get_wrapper_players: wrapper node 'Player' is incompatible and will be ignored")
 	if _wrapper_player_2 and is_instance_valid(_wrapper_player_2):
 		if _is_valid_wrapper_player(_wrapper_player_2):
-			players.append(_wrapper_player_2)
+			players.append(_wrapper_player_2 as CharacterBody2D)
 		else:
 			push_warning("Main._get_wrapper_players: wrapper node 'Player2' is incompatible and will be ignored")
 
 	for node in get_tree().get_nodes_in_group("player"):
 		if _is_valid_wrapper_player(node) and not players.has(node):
-			players.append(node)
+			players.append(node as CharacterBody2D)
 	return players
 
 func _is_valid_wrapper_player(node: Node) -> bool:
@@ -206,6 +206,7 @@ func _is_valid_wrapper_player(node: Node) -> bool:
 	if not node.is_in_group("player"):
 		return false
 	var health_value = node.get("health")
+	# Team checkpoint health + HUD hearts use integer health values.
 	if not (health_value is int):
 		return false
 	return true
