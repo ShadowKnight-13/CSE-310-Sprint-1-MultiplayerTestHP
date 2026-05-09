@@ -19,26 +19,19 @@ func _on_body_entered(body: Node2D) -> void:
 	_activated = true
 	set_deferred("monitoring", false)
 
-	var player_1_health: int = DEFAULT_HEALTH
-	var player_2_health: int = DEFAULT_HEALTH
+	var team_health: int = DEFAULT_HEALTH
 
 	for player in get_tree().get_nodes_in_group("player"):
 		if player == null:
 			continue
 
-		var player_id_value = player.get("player_id")
 		var health_value = player.get("health")
-
-		if not (player_id_value is int) or not (health_value is int):
+		if not (health_value is int):
 			continue
 
-		var player_id: int = player_id_value
-		if player_id == 1:
-			player_1_health = health_value
-		elif player_id == 2:
-			player_2_health = health_value
+		team_health = max(team_health, health_value)
 
-	CheckpointManager.set_checkpoint(global_position, player_1_health, player_2_health)
+	CheckpointManager.set_checkpoint(global_position, team_health, team_health)
 	$AnimationPlayer.play("Get")
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:

@@ -99,13 +99,11 @@ func reset_current_level_on_death() -> void:
 
 func respawn_players(full_health: bool = false) -> void:
 	var spawn_pos: Vector2 = default_spawn_position
-	var spawn_health_p1: int = default_spawn_health
-	var spawn_health_p2: int = default_spawn_health
+	var team_spawn_health: int = default_spawn_health
 
 	if CheckpointManager.has_checkpoint():
 		spawn_pos = CheckpointManager.get_spawn_position()
-		spawn_health_p1 = default_spawn_health if full_health else CheckpointManager.get_spawn_health(1)
-		spawn_health_p2 = default_spawn_health if full_health else CheckpointManager.get_spawn_health(2)
+		team_spawn_health = default_spawn_health if full_health else CheckpointManager.get_team_spawn_health()
 	else:
 		# Prefer a per-level SpawnPoint marker if it exists.
 		var spawn_node := _find_spawn_point_node(current_level_instance)
@@ -113,20 +111,17 @@ func respawn_players(full_health: bool = false) -> void:
 			spawn_pos = spawn_node.global_position
 
 		# If no spawn node exists, keep defaults.
-		spawn_health_p1 = default_spawn_health
-		spawn_health_p2 = default_spawn_health
+		team_spawn_health = default_spawn_health
 
 	var players := _get_wrapper_players()
 	for i in range(players.size()):
 		var wrapper_player := players[i]
-		var player_id := _get_player_id(wrapper_player, i + 1)
-		var player_spawn_health := spawn_health_p1 if player_id == 1 else spawn_health_p2
 		var spawn_offset := Vector2.ZERO
 		if players.size() > 1:
 			spawn_offset = TEAM_RESPAWN_OFFSETS[min(i, TEAM_RESPAWN_OFFSETS.size() - 1)]
 
 		wrapper_player.global_position = spawn_pos + spawn_offset
-		wrapper_player.health = player_spawn_health
+		wrapper_player.health = team_spawn_health
 
 		# Reset internal movement/dash/crouch/collision state for consistent respawns.
 		if wrapper_player.has_method("reset_for_respawn"):
