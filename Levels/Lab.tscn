@@ -20,7 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://cw56j18e1ed81" path="res://interactables/checkpoint_manager.tscn" id="15_1g7w2"]
 [ext_resource type="PackedScene" uid="uid://drxxs2laxnkrd" path="res://interactables/door.tscn" id="17_0newg"]
 [ext_resource type="PackedScene" uid="uid://cr3mqow5eljje" path="res://interactables/button.tscn" id="19_r1ssc"]
-[ext_resource type="PackedScene" uid="uid://saghcfd5g4wt" path="res://Player/player_2.tscn" id="21_3hmhg"]
+[ext_resource type="PackedScene" uid="uid://d0yetm658hgld" path="res://Player/player_2.tscn" id="21_3hmhg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xquew"]
 texture = ExtResource("1_hlk6t")
