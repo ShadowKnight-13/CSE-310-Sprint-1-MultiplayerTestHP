@@ -183,12 +183,18 @@ func _remove_player_nodes_recursive(root: Node) -> void:
 func _get_wrapper_players() -> Array[Node2D]:
 	var players: Array[Node2D] = []
 	if _wrapper_player_1 and is_instance_valid(_wrapper_player_1):
-		players.append(_wrapper_player_1)
+		if _is_valid_wrapper_player(_wrapper_player_1):
+			players.append(_wrapper_player_1)
+		else:
+			push_warning("Main._get_wrapper_players: wrapper node 'Player' is incompatible and will be ignored")
 	if _wrapper_player_2 and is_instance_valid(_wrapper_player_2):
-		players.append(_wrapper_player_2)
+		if _is_valid_wrapper_player(_wrapper_player_2):
+			players.append(_wrapper_player_2)
+		else:
+			push_warning("Main._get_wrapper_players: wrapper node 'Player2' is incompatible and will be ignored")
 
 	for node in get_tree().get_nodes_in_group("player"):
-		if node is CharacterBody2D and not players.has(node):
+		if _is_valid_wrapper_player(node) and not players.has(node):
 			players.append(node)
 	return players
 
