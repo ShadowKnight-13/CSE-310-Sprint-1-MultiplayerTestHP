@@ -1,6 +1,5 @@
 extends Node
-# Autoload script that holds the last checkpoint reached
-# a spawn point.
+# Autoload script that holds the last checkpoint reached by players as a spawn point.
 const DEFAULT_HEALTH: int = 3
 
 var last_position: Vector2 = Vector2.INF
