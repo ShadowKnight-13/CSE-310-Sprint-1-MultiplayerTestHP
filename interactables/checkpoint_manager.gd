@@ -1,4 +1,5 @@
 extends Node
+<<<<<<< Updated upstream
 # Autoload script that holds the last checkpoint reached
 # a spawn point.
 const DEFAULT_HEALTH: int = 3
@@ -22,11 +23,38 @@ func get_spawn_health(player_id: int) -> int:
 	if health_value is int:
 		return health_value
 	return DEFAULT_HEALTH
+=======
+
+var last_position: Vector2 = Vector2.INF
+var last_health := {
+	1: 3,
+	2: 3
+}
+
+signal checkpoint_reached(position: Vector2)
+
+func set_checkpoint(position: Vector2, player1_health: int, player2_health: int) -> void:
+	last_position = position
+	last_health[1] = clampi(player1_health, 0, 3)
+	last_health[2] = clampi(player2_health, 0, 3)
+	checkpoint_reached.emit(position)
+>>>>>>> Stashed changes
 
 func has_checkpoint() -> bool:
 	return last_position != Vector2.INF
 
+func get_spawn_position() -> Vector2:
+	return last_position
+
+func get_spawn_health(player_id: int) -> int:
+	return last_health.get(player_id, 3)
+
 func clear_checkpoint() -> void:
 	last_position = Vector2.INF
+<<<<<<< Updated upstream
 	last_health_by_player[1] = DEFAULT_HEALTH
 	last_health_by_player[2] = DEFAULT_HEALTH
+=======
+	last_health[1] = 3
+	last_health[2] = 3
+>>>>>>> Stashed changes

@@ -1,6 +1,7 @@
 extends CharacterBody2D
 class_name Player
 
+@export var player_id = 1
 const SPEED = 300.01
 const JUMP_HEIGHT: float = -500.0
 const JUMP_CUT_MULTIPLIER: float = 0.2

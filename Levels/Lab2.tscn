@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://3ngjlfokelpb" path="res://interactables/checkpoint.tscn" id="16_ryhnh"]
 [ext_resource type="PackedScene" uid="uid://dhtv0mxqg1iet" path="res://interactables/cryo_tube.tscn" id="18_44ax6"]
 [ext_resource type="PackedScene" uid="uid://cw56j18e1ed81" path="res://interactables/checkpoint_manager.tscn" id="19_r35th"]
+[ext_resource type="PackedScene" uid="uid://d0yetm658hgld" path="res://Player/player_2.tscn" id="19_v7tg8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xquew"]
 texture = ExtResource("1_x7bsa")
@@ -835,7 +836,7 @@ modulate = Color(0.509142, 0.509142, 0.509142, 1)
 position = Vector2(-1, 8)
 
 [node name="Player" parent="." unique_id=509081286 instance=ExtResource("8_owtmt")]
-position = Vector2(3478.921, 28.223145)
+position = Vector2(97.139984, -34.560028)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1909608065]
 position_smoothing_enabled = true
@@ -1660,6 +1661,9 @@ disable_mode = 1
 [node name="cryo tube144" parent="Cryo Tubes" unique_id=724537241 instance=ExtResource("18_44ax6")]
 position = Vector2(3772, 1304)
 disable_mode = 1
+
+[node name="Player2" parent="." unique_id=567807516 instance=ExtResource("19_v7tg8")]
+position = Vector2(194, -62)
 
 [editable path="MovingPlatforms/Floor 1"]
 [editable path="MovingPlatforms/Floor 2"]

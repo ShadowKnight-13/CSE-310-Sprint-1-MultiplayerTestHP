@@ -1,5 +1,7 @@
 extends HBoxContainer
 
+
+@export var player_id = 1;
 # Preloads the textures to reduce any lag
 var hearts_full = preload("res://Art Assets/hearts/heart_32x32.png")
 

@@ -6,8 +6,13 @@ extends Node2D
 
 var current_level_instance: Node = null
 @onready var _level_container: Node = $Level
+<<<<<<< Updated upstream
 @onready var _wrapper_player_1: Node2D = get_node_or_null("Player")
 @onready var _wrapper_player_2: Node2D = get_node_or_null("Player2")
+=======
+@onready var _wrapper_player: Node2D = $Player
+@onready var _wrapper_player_2 = $Player2
+>>>>>>> Stashed changes
 var _active_level_resolved_path: String = ""
 var _current_level_path: String = ""
 const TEAM_RESPAWN_OFFSETS := [Vector2(-24, 0), Vector2(24, 0)]
@@ -21,6 +26,23 @@ func _ready() -> void:
 	else:
 		# Still ensure the wrapper player has correct initial health/state.
 		respawn_players()
+<<<<<<< Updated upstream
+=======
+
+func respawn_players(full_health: bool = false) -> void:
+	var base_spawn := default_spawn_position
+
+	if CheckpointManager.has_checkpoint():
+		base_spawn = CheckpointManager.get_spawn_position()
+
+	if _wrapper_player:
+		respawn_player(_wrapper_player, full_health)
+		_wrapper_player.global_position = base_spawn + Vector2(-20, 0)
+
+	if _wrapper_player_2:
+		respawn_player(_wrapper_player_2, full_health)
+		_wrapper_player_2.global_position = base_spawn + Vector2(20, 0)
+>>>>>>> Stashed changes
 
 
 func set_font_size_recursive(node: Node, size: int) -> void:
@@ -97,6 +119,7 @@ func reset_current_level_on_death() -> void:
 
 	respawn_players(true)
 
+<<<<<<< Updated upstream
 func respawn_players(full_health: bool = false) -> void:
 	var spawn_pos: Vector2 = default_spawn_position
 	var spawn_health_p1: int = default_spawn_health
@@ -141,6 +164,24 @@ func respawn_players(full_health: bool = false) -> void:
 func respawn_player(full_health: bool = false) -> void:
 	# Backward-compat shim for scripts that still call the single-player API.
 	respawn_players(full_health)
+=======
+func respawn_player(player_node: Node2D, full_health: bool = false) -> void:
+	var spawn_pos: Vector2 = default_spawn_position
+	var spawn_health: int = default_spawn_health
+	var player_id: int = player_node.player_id
+
+	if CheckpointManager.has_checkpoint():
+		spawn_pos = CheckpointManager.get_spawn_position()
+		spawn_health = default_spawn_health if full_health else CheckpointManager.get_spawn_health(player_id)
+
+	player_node.global_position = spawn_pos
+	player_node.health = spawn_health
+
+	if player_node.has_method("reset_for_respawn"):
+		player_node.reset_for_respawn()
+
+	player_node.emit_signal("health_changed", player_node.health)
+>>>>>>> Stashed changes
 
 func _clear_current_level() -> void:
 	if current_level_instance and is_instance_valid(current_level_instance):
